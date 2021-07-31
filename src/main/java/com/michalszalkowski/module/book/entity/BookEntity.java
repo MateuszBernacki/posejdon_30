@@ -1,11 +1,13 @@
-package com.michalszalkowski.module.book;
+package com.michalszalkowski.module.book.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -20,12 +22,16 @@ public class BookEntity {
 
 	@NotNull(message = "Author for book is required 1")
 	@NotEmpty(message = "Author for book is required 2")
-	@Size(min = 3, max = 5, message = "Author should has 3 up to 5")
+	@Size(min = 3, max = 50, message = "Author should has 3 up to 5")
 	private String author;
 
 	@NotNull(message = "Title for book is required 1")
 	@NotEmpty(message = "Title for book is required 2")
 	private String title;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "details_id", referencedColumnName = "id")
+	private BookDetailsEntity details;
 
 	public Long getId() {
 		return id;
@@ -51,6 +57,15 @@ public class BookEntity {
 
 	public BookEntity setTitle(String title) {
 		this.title = title;
+		return this;
+	}
+
+	public BookDetailsEntity getDetails() {
+		return details;
+	}
+
+	public BookEntity setDetails(BookDetailsEntity details) {
+		this.details = details;
 		return this;
 	}
 }

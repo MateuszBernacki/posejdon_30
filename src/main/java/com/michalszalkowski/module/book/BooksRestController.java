@@ -1,5 +1,7 @@
 package com.michalszalkowski.module.book;
 
+import com.michalszalkowski.module.book.entity.BookDetailsEntity;
+import com.michalszalkowski.module.book.entity.BookEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +13,22 @@ public class BooksRestController {
 
 	@Autowired
 	private BookRepository bookRepository;
+
+	@GetMapping("/api/init")
+	public List<BookEntity> init() {
+
+		bookRepository.saveAndFlush(new BookEntity()
+				.setAuthor("michal")
+				.setTitle("java")
+				.setDetails(new BookDetailsEntity().setIsbn("1111").setLang("pl").setPublisher("spring")));
+
+		bookRepository.saveAndFlush(new BookEntity()
+				.setAuthor("marta")
+				.setTitle("krafting")
+				.setDetails(new BookDetailsEntity().setIsbn("2222").setLang("en").setPublisher("helion")));
+
+		return bookRepository.findAll();
+	}
 
 	@GetMapping("/api/book")
 	public List<BookEntity> getBooks() {
