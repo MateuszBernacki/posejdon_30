@@ -1,7 +1,8 @@
 package com.michalszalkowski.module.book;
 
-import com.michalszalkowski.module.book.entity.BookDetailsEntity;
+import com.michalszalkowski.module.book.dto.BookDto;
 import com.michalszalkowski.module.book.entity.BookEntity;
+import com.michalszalkowski.module.book.mapper.BookMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,41 +15,29 @@ public class BooksRestController {
 	@Autowired
 	private BookRepository bookRepository;
 
-	@GetMapping("/api/init")
-	public List<BookEntity> init() {
-
-		bookRepository.saveAndFlush(new BookEntity()
-				.setAuthor("michal")
-				.setTitle("java")
-				.setDetails(new BookDetailsEntity().setIsbn("1111").setLang("pl").setPublisher("spring")));
-
-		bookRepository.saveAndFlush(new BookEntity()
-				.setAuthor("marta")
-				.setTitle("krafting")
-				.setDetails(new BookDetailsEntity().setIsbn("2222").setLang("en").setPublisher("helion")));
-
-		return bookRepository.findAll();
-	}
-
 	@GetMapping("/api/book")
-	public List<BookEntity> getBooks() {
-		return bookRepository.findAll();
+	public List<BookDto> getBooks() {
+		List<BookEntity> books = bookRepository.findAll();
+		return BookMapper.map(books);
 	}
 
 	@GetMapping("/api/book/{id}")
-	public BookEntity getBook(@PathVariable Long id) {
-		return bookRepository.findOneById(id);
+	public BookDto getBook(@PathVariable Long id) {
+		BookEntity book = bookRepository.findOneById(id);
+		return BookMapper.map(book);
 	}
 
 	@PostMapping("/api/book")
-	public BookEntity newBook(@RequestBody @Valid BookEntity booksEntity) {
-		return bookRepository.saveAndFlush(booksEntity);
+	public BookDto newBook(@RequestBody @Valid BookEntity booksEntity) {
+		BookEntity book = bookRepository.saveAndFlush(booksEntity);
+		return BookMapper.map(book);
 	}
 
 	@PutMapping("/api/book/{id}")
-	public BookEntity updateBooks(@PathVariable Long id,
-	                               @RequestBody BookEntity booksEntity) {
-		return bookRepository.saveAndFlush(booksEntity.setId(id));
+	public BookDto updateBooks(@PathVariable Long id,
+	                           @RequestBody BookEntity booksEntity) {
+		BookEntity book = bookRepository.saveAndFlush(booksEntity.setId(id));
+		return BookMapper.map(book);
 	}
 
 	@DeleteMapping("/api/book/{id}")

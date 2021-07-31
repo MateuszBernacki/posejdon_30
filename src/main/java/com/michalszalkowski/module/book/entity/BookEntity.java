@@ -6,11 +6,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 @Entity
 @Table(name = "book")
@@ -32,6 +34,9 @@ public class BookEntity {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "details_id", referencedColumnName = "id")
 	private BookDetailsEntity details;
+
+	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+	private Set<BookTagEntity> tags;
 
 	public Long getId() {
 		return id;
@@ -66,6 +71,15 @@ public class BookEntity {
 
 	public BookEntity setDetails(BookDetailsEntity details) {
 		this.details = details;
+		return this;
+	}
+
+	public Set<BookTagEntity> getTags() {
+		return tags;
+	}
+
+	public BookEntity setTags(Set<BookTagEntity> tags) {
+		this.tags = tags;
 		return this;
 	}
 }
