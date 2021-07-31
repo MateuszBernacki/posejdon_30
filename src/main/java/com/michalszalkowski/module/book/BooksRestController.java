@@ -3,6 +3,7 @@ package com.michalszalkowski.module.book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,7 @@ public class BooksRestController {
 	}
 
 	@PostMapping("/api/book")
-	public BookEntity newBook(@RequestBody BookEntity booksEntity) {
+	public BookEntity newBook(@RequestBody @Valid BookEntity booksEntity) {
 		return bookRepository.saveAndFlush(booksEntity);
 	}
 
